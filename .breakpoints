@@ -1,0 +1,36 @@
+{
+  "files": {
+    "src/AddToCart.jsx": [
+      {
+        "id": "7537ee97-67eb-4620-9119-841f399f1a1a",
+        "line": 24,
+        "version": 3787,
+        "index": 641
+      }
+    ],
+    "src/Container.jsx": [
+      {
+        "id": "a9404b05-2363-4ac5-b2fc-0623679b7090",
+        "line": 1,
+        "version": 2929,
+        "index": 0
+      }
+    ],
+    "src/ProdectDetailCard.jsx": [
+      {
+        "id": "0fb787d7-00af-4ce8-811b-6c8d66fc736e",
+        "line": 47,
+        "version": 4073,
+        "index": 1112
+      }
+    ],
+    "src/ProdectPage.jsx": [
+      {
+        "id": "2828b727-f97a-4dc8-943d-168135cd481d",
+        "line": 10,
+        "version": 999,
+        "index": 333
+      }
+    ]
+  }
+}
