@@ -26,8 +26,6 @@ function App() {
   const [user, setUser] = useState();
   const [loadingUser, setLoadingUser] = useState(true);
 
-  console.log("login user", user);
-
   const token = localStorage.getItem("token");
 
 
@@ -46,8 +44,6 @@ function App() {
     }
   }, []);
 
-
-
   const handleAddToCard = (productId, count) => {
     const oldCount = cart[productId] || 0;
 
@@ -59,24 +55,22 @@ function App() {
     setCart(newCart);
     const cartString = JSON.stringify(newCart);
     localStorage.setItem("my-cart", cartString);
-  }
-
-  console.log("This is Card", cart);
+  };
 
   const totalCount = Object.keys(cart).reduce(function (previous, current) {
     return previous + cart[current];
   }, 0);
 
-  // if (loadingUser) {
-  //   return <Loading />
-  // }
+  if (loadingUser) {
+    return <Loading />
+  };
 
   return (
     <div>
       <Header productCount={totalCount} />
       <Routes>
-        <Route index element={<Dashboard user={user} />} />
-        <Route path="/" element={<ProdectPage />} />
+        {/* <Route index element={<Dashboard user={user} />} /> */}
+        <Route index element={<ProdectPage />} />
         <Route
           path="/product/:id/detail"
           element={<ProdectDetails onAddToCard={handleAddToCard} />}

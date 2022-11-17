@@ -29,7 +29,7 @@ function Header({ productCount }) {
             <Button>Sign Up</Button>
           </Link>
 
-          <Link to="/cart">
+          <Link to="/cart" >
             <div className="relative flex items-center justify-center">
               {' '}
               <HiOutlineShoppingBag className="text-4xl text-red-400 hover:text-red-600" />
@@ -55,7 +55,9 @@ function Header({ productCount }) {
         />
         <div className="flex justify-center items-center gap-3 ">
 
-          <Link to="/cart">
+          <Link
+          to="/"
+          >
             <div className="relative   flex items-center justify-center">
               {' '}
               <HiOutlineShoppingBag className="text-4xl text-red-400 hover:text-red-600" />

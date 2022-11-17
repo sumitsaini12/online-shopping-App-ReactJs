@@ -1,40 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import TotalCard from './CardItems/TotalCard';
-import ListCard from './CardItems/ListCard';
+import ListCart from './CardItems/ListCart';
 import { getProductData } from './api';
 import Loading from './Loading';
 
 function AddToCart({ cart, UpdateCart }) {
-  const [products, setProducts] = useState([]);
+
+  const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(true);
   const [localCart, setLocalCart] = useState(cart);
-  const productIds = Object.keys(cart);
+  const ProductId = Object.keys(cart);
 
-  useEffect(
-    () => {
-      setLocalCart(cart);
-    },
-    [cart]
-  );
 
-  console.log('outSide Product data', products);
+  useEffect(() => {
+    setLocalCart(cart);
+  }, [cart]);
 
-  useEffect(
-    () => {
-      const myProductsPromises = productIds.map(id => {
-        return getProductData(id);
-      });
 
-      Promise.all(myProductsPromises).then(products => {
-        console.log('useEffect data', products);
-        setProducts(products);
-        setLoading(false);
-      });
-    },
-    [cart]
-  );
+  useEffect(() => {
+    const myProductPromise = ProductId.map(id => {
+      return getProductData(id);
+    });
 
-  const Data = products.map(p => {
+    Promise.all(myProductPromise).then((product) => {
+      setProduct(product);
+      setLoading(false);
+    })
+
+  }, [cart]);
+
+  const Data = product.map(p => {
     return {
       id: p.data.id,
       title: p.data.title,
@@ -44,45 +39,46 @@ function AddToCart({ cart, UpdateCart }) {
     };
   });
 
-  const handleRemove = event => {
-    const productId = event.currentTarget.getAttribute('productid');
-    console.log('product to be removed', productId);
+  const Total = Data.map(p => {
+    return p.price * cart[p.id]
+  });
+
+  const TotalPrice = Total.reduce((previous, current) => {
+    return previous + current;
+  }, 0);
+
+
+  const handleRomove = (productId) => {
+
     const newCart = { ...cart };
-    console.log('before', newCart);
     delete newCart[productId];
     UpdateCart(newCart);
-    console.log('after', newCart);
     setLoading(true);
   };
 
-  const handleChange = event => {
-    const newValue = +(event.target.value);
-    const productId = event.target.getAttribute('productid');
-    console.log('handleChandge', newValue, productId);
+  const handleChange = (newValue, productId) => {
     const newLocalCart = { ...localCart, [productId]: newValue };
     setLocalCart(newLocalCart);
   };
 
-  const updateMyCart = () => {
+  const myUpdataCart = () => {
     UpdateCart(localCart);
+    setLoading(true);
   };
 
-  console.log('Data', Data);
-  console.log('this is products', products);
-
   if (loading) {
-    return <Loading />;
-  }
+    return (<Loading />)
+  };
 
   return (
     <>
-      <div className="w-full bg-gray-200 ">
+      <div className="w-full p-4 bg-gray-200 ">
         <div className="h-full max-w-6xl p-4 bg-white mx-auto">
-          <ListCard data={Data} ListRemove={handleRemove} valueChange={handleChange} value={localCart} updataCart={updateMyCart} />
+          <ListCart updataCart={myUpdataCart} remove={handleRomove} onChange={handleChange} data={Data} cart={cart} localCart={localCart} />
           <div className="w-full lg:py-2 flex">
             <div className="hidden lg:flex w-1/2" />
             <div className="lg:w-1/2 w-full lg:flex justify-end items-end">
-              <TotalCard />
+              <TotalCard TotalPrice={TotalPrice} />
               <div />
             </div>
           </div>
@@ -93,3 +89,7 @@ function AddToCart({ cart, UpdateCart }) {
 }
 
 export default AddToCart;
+
+
+
+// updataCart={updateMyCart}

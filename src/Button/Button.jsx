@@ -10,7 +10,7 @@ function Button(props) {
 
 
   return (
-    <button className={`px-12 py-2 rounded-md bg-red-500 font-medium text-2xl ` + theme}>
+    <button className={`px-12 py-2 rounded-md bg-red-500 font-medium text-2xl ` + theme} onClick={props.onClick}>
       {props.children}
     </button>
   );

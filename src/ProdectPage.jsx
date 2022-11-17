@@ -9,17 +9,17 @@ function ProdectPage() {
   console.log("Prodect Page is reruning 1SS");
 
   const [productList, setProductList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [num , setNum] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [num, setNum] = useState(0);
 
   useEffect(() => {
     const result = getProductList(num);
 
     result.then(response => {
       setProductList(response.data.products);
-      setLoading(false);
+      setLoading(true);
     });
-  }, [num, ""]);
+  }, [num]);
 
 
   const [query, setQuery] = useState('');
@@ -57,7 +57,7 @@ function ProdectPage() {
       return y.price - x.price;
     });
   }
-  if (loading) {
+  if (!loading) {
     return <Loading />;
   }
 
@@ -66,7 +66,7 @@ function ProdectPage() {
       <div className="p-4 mx-auto bg-white max-w-6xl rounded-md drop-shadow-xl ">
         <h3 className="text-5xl text-center mb-5 sm:mb-0 font-medium text-red-500 ml-5">
           Shop
-				</h3>
+        </h3>
         <div className="flex flex-col justify-center items-center md:justify-between md:flex-row p-10 md:p-5 gap-4">
           <input
             className="py-2 pl-5 mx-12 md:flex-1 rounded-md border text-gray-500"
@@ -81,7 +81,7 @@ function ProdectPage() {
           >
             <option className="hidden" value="defaut">
               defaut setting
-						</option>
+            </option>
             <option value="name">Sort by Name</option>
             <option value="latest">Sort by latest</option>
             <option value="low to high">Sort by price: low to high</option>
@@ -93,17 +93,19 @@ function ProdectPage() {
             return <Card {...item} key={item.id} />;
           })}
         </div>
+
+        <div className="space-x-4 mt-4 ">
+          <button onClick={() => setNum(0)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white">1</button>
+
+          <button onClick={() => setNum(30)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white">2</button>
+
+          <button onClick={() => setNum(60)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white">3</button>
+
+          <button onClick={() => setNum(90)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white"><FiChevronsRight className="w-6 h-6" /></button>
+
+        </div>
       </div>
-      <div className="space-x-4 -mb-12 ">
-                <button onClick={() => setNum(0)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white">1</button>
 
-                <button onClick={() => setNum(30)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white">2</button>
-
-                <button onClick={() => setNum(60)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white">3</button>
-
-                <button onClick={() => setNum(90)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white"><FiChevronsRight className="w-6 h-6" /></button>
-
-            </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '../Button/Button';
 
-function TotalCard() {
+function TotalCart({ TotalPrice }) {
 
 
   return (
@@ -10,11 +10,11 @@ function TotalCard() {
       <div className="p-4">
         <div className="p-4 border-b border-gray-500 flex w-full">
           <span className="text-xl font-medium w-1/2">Subtotal</span>
-          <span className="text-xl font-medium">$</span>
+          <span className="text-xl font-medium">${TotalPrice}.00</span>
         </div>
         <div className="p-4 border-b border-gray-500 flex w-full">
           <span className="text-xl font-medium w-1/2">Total</span>
-          <span className="text-xl font-medium">$</span>
+          <span className="text-xl font-medium">${TotalPrice}.00</span>
         </div>
         <div className="py-4 flex flex-col justify-center">
           <Button>PROCEED TO CHECKOUT</Button>
@@ -25,4 +25,4 @@ function TotalCard() {
   );
 }
 
-export default TotalCard
+export default TotalCart
