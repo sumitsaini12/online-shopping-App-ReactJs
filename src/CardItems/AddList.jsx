@@ -45,7 +45,7 @@ function AddList({ img, price, title, quantity, Subtotal, onChange, id, remove }
         </div>
         <div className=" flex justify-between p-2 border-b border-gray-500 ">
           <span className="text-xl font-semibold">Quantity:</span>
-          <input type="type" onChange={(event) => { onChange(+event.target.value, id) }} className="pl-4 py-4 border border-gray-300 text-center w-16 h-6 font-medium " value={quantity} />
+          <input type="number" onChange={(event) => { onChange(+event.target.value, id) }} className="pl-2 py-4 border border-gray-300 text-center w-16 h-6 font-medium " value={quantity} />
         </div>
         <div className=" flex justify-between p-2 ">
           <span className="text-xl font-semibold">Subtotals:</span>

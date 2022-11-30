@@ -1,80 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import TotalCard from './CardItems/TotalCard';
 import ListCart from './CardItems/ListCart';
-import { getProductData } from './api';
 import Loading from './Loading';
+import { withAlert, withCart } from './withProvider';
 
-function AddToCart({ cart, UpdateCart }) {
+function AddToCart({ cart, updateCart, setAlert }) {
 
-  const [product, setProduct] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [localCart, setLocalCart] = useState(cart);
-  const ProductId = Object.keys(cart);
+  // const [loading, setLoading] = useState(true);
+  const [quantityMap, setQuantityMap] = useState({});
 
+
+  const cartToQuantityMap = () => cart.reduce(
+    (m, cartItem) => ({ ...m, [cartItem.product.id]: cartItem.quantity })
+    , {})
 
   useEffect(() => {
-    setLocalCart(cart);
+    setQuantityMap(cartToQuantityMap());
   }, [cart]);
 
 
-  useEffect(() => {
-    const myProductPromise = ProductId.map(id => {
-      return getProductData(id);
-    });
-
-    Promise.all(myProductPromise).then((product) => {
-      setProduct(product);
-      setLoading(false);
-    })
-
-  }, [cart]);
-
-  const Data = product.map(p => {
+  const Data = cart.map(p => {
     return {
-      id: p.data.id,
-      title: p.data.title,
-      price: p.data.price,
-      img: p.data.thumbnail,
-      Subtotal: p.data.price
+      id: p.product.id,
+      title: p.product.title,
+      price: p.product.price,
+      img: p.product.thumbnail,
+      Subtotal: p.product.price,
+      quantity: (quantityMap[p.product.id] || cart.quantity),
     };
   });
 
-  const Total = Data.map(p => {
-    return p.price * cart[p.id]
+  const Total = cart.map(p => {
+    return p.product.price * p.quantity
   });
 
   const TotalPrice = Total.reduce((previous, current) => {
     return previous + current;
   }, 0);
 
-
   const handleRomove = (productId) => {
-
-    const newCart = { ...cart };
-    delete newCart[productId];
-    UpdateCart(newCart);
-    setLoading(true);
+    const newQuantityMap = cartToQuantityMap();
+    delete newQuantityMap[productId];
+    updateCart(newQuantityMap);
+    
+    setAlert({ type: "Info", message: "Remove cart successfully!" });
   };
 
   const handleChange = (newValue, productId) => {
-    const newLocalCart = { ...localCart, [productId]: newValue };
-    setLocalCart(newLocalCart);
+    const newQuantityMap = { ...quantityMap, [productId]: newValue };
+    setQuantityMap(newQuantityMap);
   };
 
   const myUpdataCart = () => {
-    UpdateCart(localCart);
-    setLoading(true);
-  };
-
-  if (loading) {
-    return (<Loading />)
+    updateCart(quantityMap);
+    setAlert({ type: "Info", message: "Updata cart successfully!" });
   };
 
   return (
     <>
       <div className="w-full p-4 bg-gray-200 ">
         <div className="h-full max-w-6xl p-4 bg-white mx-auto">
-          <ListCart updataCart={myUpdataCart} remove={handleRomove} onChange={handleChange} data={Data} cart={cart} localCart={localCart} />
+          <ListCart updataCart={myUpdataCart} remove={handleRomove} onChange={handleChange} data={Data} localCart={quantityMap} />
           <div className="w-full lg:py-2 flex">
             <div className="hidden lg:flex w-1/2" />
             <div className="lg:w-1/2 w-full lg:flex justify-end items-end">
@@ -88,8 +74,4 @@ function AddToCart({ cart, UpdateCart }) {
   );
 }
 
-export default AddToCart;
-
-
-
-// updataCart={updateMyCart}
+export default withAlert(withCart(AddToCart));

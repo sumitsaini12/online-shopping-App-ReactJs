@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 function Card({ title, id, category, thumbnail, price }) {
-  console.log('Card is reruning');
+
   return (
     <Link
       to={'/product/' + id + '/detail'}>
@@ -15,14 +15,11 @@ function Card({ title, id, category, thumbnail, price }) {
           className="w-28"
           src="https://media.discordapp.net/attachments/937339895591079957/1009454339749847090/red_five_star.jpg?width=1025&height=155"
         />
-
         <p className="text-xl font-bold py-3 pl-2"> $ {price}</p>
-
-
 
       </div>
     </Link>
   );
 }
 
-export default Card;
+export default memo(Card);

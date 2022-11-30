@@ -1,15 +1,22 @@
-import React, { memo, useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { HiOutlineShoppingBag, HiOutlineHome } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import Button from './Button/LoginButton';
 import { FiMenu } from 'react-icons/fi';
 import { MdClear } from "react-icons/md";
+import { withAlert, withCart, withUser } from './withProvider';
 
-function Header({ productCount }) {
+function Header({ cartCount, setUser, setAlert }) {
   const [nav, setNav] = useState(false)
   const handleClick = () => setNav(!nav)
 
-  const handleClose = () => setNav(!nav)
+  // const handleClose = () => setNav(!nav)
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(undefined);
+    setAlert({ type: "Warning", message: "User LogOut successfully!" })
+  };
 
   return (
     <div className=" z-10 relative py-2 bg-white  drop-shadow-2xl">
@@ -29,14 +36,16 @@ function Header({ productCount }) {
             <Button>Sign Up</Button>
           </Link>
 
+          <Button theme="red" onClick={handleLogout}>LogOut</Button>
+
           <Link to="/cart" >
             <div className="relative flex items-center justify-center">
               {' '}
               <HiOutlineShoppingBag className="text-4xl text-red-400 hover:text-red-600" />
-              {productCount > 0 && (
+              {cartCount > 0 && (
                 <div className="absolute -top-3 -right-2 w-5 h-5 rounded-full bg-red-500 hover:bg-transparent border hover:border-red-500 flex items-center justify-center">
                   <p className="text-sm hover:text-red-500  text-white font-semibold ">
-                    {productCount}
+                    {cartCount}
                   </p>
                 </div>
               )}
@@ -56,15 +65,15 @@ function Header({ productCount }) {
         <div className="flex justify-center items-center gap-3 ">
 
           <Link
-          to="/"
+            to="/cart"
           >
             <div className="relative   flex items-center justify-center">
               {' '}
               <HiOutlineShoppingBag className="text-4xl text-red-400 hover:text-red-600" />
-              {productCount > 0 && (
+              {cartCount > 0 && (
                 <div className="absolute -top-3 -right-2 w-5 h-5 rounded-full bg-red-500 hover:bg-transparent border hover:border-red-500 flex items-center justify-center">
                   <p className="text-sm hover:text-red-500  text-white font-semibold ">
-                    {productCount}
+                    {cartCount}
                   </p>
                 </div>
               )}
@@ -79,27 +88,31 @@ function Header({ productCount }) {
       </div>
       <div className={!nav ? 'hidden' : ' md:hidden font-normal flex-col absolute bg-white w-full px-8'}>
         <ul >
-          <li className='border-b-2 p-4 border-zinc-300 w-full cursor-pointer'><Link to="/">Home</Link></li>
-          <li className='border-b-2 p-4 border-zinc-300 w-full cursor-pointer'><Link to="/">All Prodects</Link></li>
-          <li className='border-b-2 p-4 border-zinc-300 w-full cursor-pointer'>About</li>
+          <Link to="/"><li onClick={handleClick} className='border-b-2 p-4 border-zinc-300 w-full cursor-pointer'>Home</li></Link>
+          <Link to="/"><li onClick={handleClick} className='border-b-2 p-4 border-zinc-300 w-full cursor-pointer'>All Prodects</li></Link>
+         <a href='https://curious-sunburst-62c482.netlify.app/' target="_blank"><li className='border-b-2 p-4 border-zinc-300 w-full cursor-pointer'>About</li></a>
         </ul>
 
         <div className="py-4">
           <Link to="/login">
             <div className="flex flex-col py-4">
-              <Button theme="secondary">Login</Button>
+              <Button onClick={handleClick} theme="secondary">Login</Button>
             </div>
           </Link>
 
           <Link to="/signUp">
             <div className="flex flex-col py-4">
-              <Button>Sign Up</Button>
+              <Button onClick={handleClick}>Sign Up</Button>
             </div>
           </Link>
+
+          <div onClick={handleClick} className="flex flex-col py-4">
+            <Button theme="red" onClick={handleLogout}>Log Out</Button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export default memo(Header);
+export default withAlert(withUser(withCart(Header)));

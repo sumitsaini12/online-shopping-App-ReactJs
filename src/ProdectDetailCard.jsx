@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { TiArrowBack } from 'react-icons/ti';
 import { MdArrowBack, MdArrowForward } from 'react-icons/md';
+import { withAlert } from './withProvider';
 
 function ProdectDetailCard({
   id,
@@ -10,7 +11,8 @@ function ProdectDetailCard({
   title,
   price,
   description,
-  onAddToCard
+  onAddToCard,
+  setAlert
 }) {
 
   const [quantity, setQuantity] = useState(1);
@@ -25,6 +27,7 @@ function ProdectDetailCard({
   const handleAddToCard = () => {
     onAddToCard(id, quantity);
     setQuantity(1);
+    setAlert({type: "Success", message: "Product Add To Cart Successfully"});
   };
 
   useEffect(
@@ -125,4 +128,4 @@ function ProdectDetailCard({
   );
 }
 
-export default ProdectDetailCard;
+export default withAlert(ProdectDetailCard);

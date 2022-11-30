@@ -2,61 +2,52 @@ import React, { memo, useState, useEffect } from 'react';
 import Card from './Card';
 import { getProductList } from './api';
 import Loading from './Loading';
-import { FiChevronsRight } from "react-icons/fi";
-
+import Button from './Button/LoginButton';
+import { range } from "lodash";
+import { Link, useSearchParams } from 'react-router-dom';
 
 function ProdectPage() {
-  console.log("Prodect Page is reruning 1SS");
 
-  const [productList, setProductList] = useState([]);
+  const [productData, setProductData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [num, setNum] = useState(0);
+
+  let [searchParams, setSearchParams] = useSearchParams();
+
+  const params = Object.fromEntries([...searchParams]);
+
+  let { query, sort, page } = params;
+
+  query = query || '';
+  sort = sort || "default";
+  page = +page || 1;
 
   useEffect(() => {
-    const result = getProductList(num);
+    let sortBy;
+    let sortType;
 
-    result.then(response => {
-      setProductList(response.data.products);
+    if (sort == "title") {
+      sortBy = "title";
+    } else if (sort == "lowToHigh") {
+      sortBy = "price";
+    } else if (sort == "highToLow") {
+      sortBy = "price";
+      sortType = "desc";
+    };
+
+    getProductList(sortBy, query, page, sortType).then(response => {
+      setProductData(response);
       setLoading(true);
     });
-  }, [num]);
-
-
-  const [query, setQuery] = useState('');
-  const [sort, setSort] = useState('defaut');
-
-  const data = productList.filter(item => {
-    const lowerCaseTitle = item.title.toLocaleLowerCase();
-    const lowerCaseQuery = query.toLowerCase();
-
-    return lowerCaseTitle.indexOf(lowerCaseQuery) != -1;
-  });
+  }, [sort, query, page]);
 
   const onHandleSearch = e => {
-    setQuery(e.target.value);
+    setSearchParams({ ...params, query: e.target.value, page: 1 });
   };
 
   const onHandleSort = e => {
-    setSort(e.target.value);
+    setSearchParams({ ...params, sort: e.target.value });
   };
 
-  if (sort == 'name') {
-    data.sort((x, y) => {
-      return x.title < y.title ? -1 : 1;
-    });
-  } else if (sort == 'latest') {
-    data.sort((x, y) => {
-      return x.title < y.title ? 1 : -1;
-    });
-  } else if (sort == 'low to high') {
-    data.sort((x, y) => {
-      return x.price - y.price;
-    });
-  } else if (sort == 'high to low') {
-    data.sort((x, y) => {
-      return y.price - x.price;
-    });
-  }
   if (!loading) {
     return <Loading />;
   }
@@ -79,29 +70,31 @@ function ProdectPage() {
             value={sort}
             onChange={onHandleSort}
           >
-            <option className="hidden" value="defaut">
+            <option className="hidden" value="default">
               defaut setting
             </option>
-            <option value="name">Sort by Name</option>
-            <option value="latest">Sort by latest</option>
-            <option value="low to high">Sort by price: low to high</option>
-            <option value="high to low">Sort by Price: high to low</option>
+            <option value="name">Sort by default</option>
+            <option value="title">Sort by Name</option>
+            <option value="lowToHigh">Sort by price: low to high</option>
+            <option value="highToLow">Sort by Price: high to low</option>
           </select>
         </div>
         <div className="mx-auto grid md:grid-cols-3 items-center justify-center">
-          {data.map(item => {
+          {productData.data.length && productData.data.map(item => {
             return <Card {...item} key={item.id} />;
           })}
         </div>
 
-        <div className="space-x-4 mt-4 ">
-          <button onClick={() => setNum(0)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white">1</button>
-
-          <button onClick={() => setNum(30)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white">2</button>
-
-          <button onClick={() => setNum(60)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white">3</button>
-
-          <button onClick={() => setNum(90)} className="p-5 rounded-md border-2 border-gray-600 text-2xl font-bold hover:bg-gray-200 focus:bg-red-500 focus:text-white"><FiChevronsRight className="w-6 h-6" /></button>
+        <div className="mt-3">
+          {range(1, productData.meta.last_page + 1).map((pageNo) => (
+            <Link
+              key={pageNo}
+              to={"?" + new URLSearchParams({ ...params, page: pageNo })}
+              className={"px-6 py-1 m-2 rounded-md font-normal border-2 text-2xl text-white " + ((pageNo === page) ? "bg-red-500 border-red-700" : "bg-indigo-500 border-indigo-700")}
+            >
+              {pageNo}
+            </Link>
+          ))}
 
         </div>
       </div>
@@ -111,3 +104,4 @@ function ProdectPage() {
 }
 
 export default memo(ProdectPage);
+

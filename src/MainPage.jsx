@@ -5,7 +5,6 @@ import Futer from './Futer';
 
 
 function MainPage() {
-  console.log("MainPage is reruning");
   return (
 
     <div className="">

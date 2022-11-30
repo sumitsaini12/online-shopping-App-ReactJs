@@ -1,16 +1,8 @@
 import React, { memo } from 'react';
 import Input from './Input';
 import { HiOutlineMail } from 'react-icons/hi';
-import { useField } from 'formik';
-import FormikHOC from './FormikHOC';
 
 function EmailInput({ name, value, onBlur, onChange, error, touched, ...rest }) {
-
-	// const field = useField(name);
-
-	// const [data, meta] = field;
-	// const { value, onBlur, onChange } = data;
-	// const { error, touched } = meta;
 
 	let errorClassEmail;
 
@@ -33,6 +25,7 @@ function EmailInput({ name, value, onBlur, onChange, error, touched, ...rest }) 
 						onBlur={onBlur}
 						onChange={onChange}
 						name={name}
+						touched={touched}
 						{...rest}
 					/>
 				</div>
@@ -42,7 +35,5 @@ function EmailInput({ name, value, onBlur, onChange, error, touched, ...rest }) 
 		</div>
 	);
 }
-
-export const FormikEmailInput = FormikHOC(EmailInput);
 
 export default memo(EmailInput)

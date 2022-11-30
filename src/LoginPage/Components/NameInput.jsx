@@ -1,10 +1,8 @@
 import React, { memo } from 'react';
 import Input from './Input';
 import { HiOutlineMail } from 'react-icons/hi';
-import FormikHOC from './FormikHOC';
 
 function NameInput({ name, value, onBlur, onChange, error, touched, ...rest }) {
-
 
 	let errorClassName;
 
@@ -35,8 +33,6 @@ function NameInput({ name, value, onBlur, onChange, error, touched, ...rest }) {
 		</div>
 	);
 }
-
-export const FormikNameInput = FormikHOC(NameInput);
 
 export default memo(NameInput)
 

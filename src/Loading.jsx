@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 
 function Loading() {
-  console.log("Loading Page is rerunning");
+
   return (
     <>
       <div className="flex justify-center items-center h-screen">

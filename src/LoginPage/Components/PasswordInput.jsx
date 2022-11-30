@@ -5,7 +5,6 @@ import {
 	HiOutlineEye,
 	HiOutlineEyeOff
 } from 'react-icons/hi';
-import FormikHOC from './FormikHOC';
 
 function PasswordInput({ icon, name, value, onBlur, onChange, error, touched, ...rest }) {
 
@@ -65,7 +64,5 @@ function PasswordInput({ icon, name, value, onBlur, onChange, error, touched, ..
 		</div>
 	);
 }
-
-export const FormikPasswordInput = FormikHOC(PasswordInput);
 
 export default memo(PasswordInput)
